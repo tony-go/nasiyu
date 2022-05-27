@@ -24,19 +24,33 @@ manager.addStep(
 );
 
 export manager;
+```
 
-// far away
-// await manager.run();
+````js
+import manager from 'wher-your-export'
+
+// where you want to execute it
+await manager.run();
 // or
-// const it = manager.it();
+const it = manager.it();
+```
 
+```js
 // in a test file
-const fakeReadFile = spy();
-// manager.overwriteInject({
-    fs: {
-      readFile: fakeReadFile
-    }
-// })
 
+import manager from 'wher-your-export'
+
+test('should read a file', () => {
+  const fakeReadFile = spy();
+  manager.overwriteInject({
+      fs: {
+        readFile: fakeReadFile
+      }
+  });
+  
+  await manager.run();
+  
+  expect(fakeReadFile.calls.length).toEqual(1);
+})
 ```
 
