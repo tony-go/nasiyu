@@ -26,7 +26,7 @@ manager.addStep(
 export manager;
 ```
 
-````js
+```js
 import manager from 'wher-your-export'
 
 // where you want to execute it
