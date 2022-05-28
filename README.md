@@ -46,7 +46,7 @@ myScript.addStep(
       logger.error('end');
       return exit(34);
     }
-    logger.info('continue ...);
+    logger.info('continue ...');
   }
 );
 
