@@ -68,10 +68,13 @@ import myScript from 'wher-your-export';
 
 test('should read a file', () => {
   const fakeReadFile = spy();
-   myScript.overwriteInject({
+  myScript.overwriteInject({
       fs: {
         readFile: fakeReadFile
       }
+  });
+  myScript.overwriteOptions({
+    logger: false
   });
   
   await myScript.run();
