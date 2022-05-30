@@ -1,3 +1,5 @@
+> ⚠️: This package doesn't exist at the moment. It's only a spike made with a Readme driven development approach.
+
 <h1 align="center">nasiyu</h1>
 <h3 align="center">Opinionated framework for writing reliable and testable scripts.</h3>
 
