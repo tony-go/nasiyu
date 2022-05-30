@@ -18,6 +18,8 @@ $ npm install @tonygo/nasiyu
 
 ### Sequential script
 
+Create your script:
+
 ```js
 import { Builder } from '@tonygo/nasiyu';
 import fs from 'fs/promises'
@@ -53,6 +55,8 @@ myScript.addStep(
 export myScript;
 ```
 
+Execute your script:
+
 ```js
 // run your script elsewhere
 import myScript from 'wher-your-export';
@@ -62,13 +66,15 @@ await  myScript.run();
 const it =  myScript.it();
 ```
 
+Test your script easily:
+
 ```js
 // in a test file
 import myScript from 'wher-your-export';
 
 test('should read a file', () => {
   const fakeReadFile = spy();
-  myScript.overwriteInject({
+  myScript.overwriteInjected({
       fs: {
         readFile: fakeReadFile
       }
@@ -87,21 +93,101 @@ In the console it should output (should be polished):
 
 ```bash
 ==========<sequential script>===========
-|-----> 🏎- step number1 starts
-|-----> Info - Running ...
-|-----> Info - "Env, dev"
-|-----> Success - Finished
-|-----> 🏎- step number2 starts
-|-----> Info - Running ...
-|-----> Error - end 
-|-----> Error - Exited with code 34 
+| step number 1 | 🏎 Start
+| step number 1 | INFO - Running ...
+| step number 1 | INFO - Env, dev
+| step number 1 | 🏁 Finished
+| ------------------
+| step number 2 | 🏎 Start
+| step number 2 | INFO - Running ...
+| step number 2 | ERROR - end
+| step number 2 | ERROR - Exited with code 34 
+| step number 2 | 🏁 Finished
+| ------------------
 ==========<sequential script>===========
 ```
 
 ### Script with concurrency 
 
-> todo(tonygo)
+Create your script:
+
+```js
+import { Builder } from '@tonygo/nasiyu';
+import fs from 'fs/promises'
+
+const myScript = new Builder({
+  name: 'script with concurrency',
+  concurrency: 'default',
+});
+
+myScript.addStep(
+  'step number 1',
+  async ({ logger }) => {
+    setTimeout(() => {
+      logger.info('bar')
+    }, 2000)
+  }
+);
+
+myScript.addStep(
+  'step number 2',
+  async ({ logger }) => {
+    logger.info('foo')
+  }
+);
+
+export myScript;
+```
+
+In the console it should output unordered logs (should be polished):
+
+```bash
+==========<sequential script>===========
+| step number 1 | 🏎 Start
+| step number 1 | INFO - Running ...
+| step number 2 | 🏎 Start
+| step number 2 | INFO - Running ...
+| step number 2 | INFO - foo
+| step number 2 | 🏁 Finished
+| step number 1 | INFO - foo
+| step number 1 | 🏁 Finished
+==========<sequential script>===========
+```
+
 
 ## API
 
-> todo(tonygo)
+## const script = new Builder(options: BuilderOptions): Script;
+
+```typescript
+interface BuilderOptions<Injected = Record<string, any>> {
+  name: string;
+  description?: string;
+  inject?: Injected,
+  concurrency?: 'default' | true | number, // default false
+  logger?: boolean // default true
+}
+
+interface Script {
+  /**
+  * Invoke this method to run the script
+  */
+  run: () => Promise<boolean>;
+  
+  /**
+  * Return an iterator to execute step in a lazy way
+  * Note: only available in sequential mode
+  */
+  it: () => Iterable<boolean>;
+  
+  /**
+  * Overwrite injected object
+  */
+  overwriteInjected: (dependencies: Injected) => void;
+  
+  /**
+  * Overwrite options
+  */
+  overwriteOptions: (options: BuilderOptions) => void;
+}
+```
