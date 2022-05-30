@@ -2,11 +2,11 @@
 <h3 align="center">Opinionated framework for writing reliable and testable scripts.</h3>
 
 ## ⭐️ Features
-- Developer friendly
-- Testable (dependency injection)
-- Typescript ready
-- Iterator ready
-- Sequential/parallel execution 
+- 🦾 Developer friendly
+- ☢️ Testable (dependency injection)
+- 🏭 Typescript ready
+- ➰ Iterator ready
+- 👯 Sequential/parallel execution 
 
 ## 📦 Install
 
